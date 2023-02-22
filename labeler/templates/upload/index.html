@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block page_title %}
+    Smart Labeler
+{% endblock %}
+
+{% block header %}
+    {% if is_auth %}
+        <nav class="navbar navbar-dark bg-dark navbar-expand-lg shadow-sm mb-2">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="container-fluid">
+                    <ul class="navbar-nav justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'upload-page' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{% url 'label-page' %}">Label</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{% url 'about-page' %}">About</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mx-2">
+                    {% include 'logout.html' %}
+                </div>
+            </div>
+        </nav>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div class="container-fluid mt-10">
+        <h3 class="text-center">Upload the media to label</h3>
+        <section id="upload-media">
+            <div class="row">
+                <div class="col-md-8 m-auto">
+                    <div class="card">
+                        <form enctype="multipart/form-data" action="{% url 'post-media' %}" method="post" class="p-3">
+                            {% csrf_token %}
+                            <div class="mb-3 form-floating">
+                                <select class="form-control" name="media_type" id="media-type"
+                                        aria-label="media type choice">
+                                    <option selected>Open this select menu</option>
+                                    <option value="IMAGE">Image</option>
+                                    <option value="VIDEO">Video</option>
+                                </select>
+                                <label for="media-type">Media Type</label>
+                                {% if form.media_type.errors %}
+                                    <ul class="list-group">
+                                        {% for error in form.media_type.errors %}
+                                            <li class="list-group-item list-group-item-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3 form-floating">
+                                <input class="form-control" type="file" name="media" id="media"
+                                       accept=".jpg,.png,.jpeg,.mp4"
+                                       aria-label="media files" multiple>
+                                <label for="media">Upload Media</label>
+                                {% if form.media.errors %}
+                                    <ul class="list-group">
+                                        {% for error in form.media.errors %}
+                                            <li class="list-group-item list-group-item-danger">
+                                                <strong>{{ error|escape }}</strong>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <button class="btn btn-primary" type="submit">Upload</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

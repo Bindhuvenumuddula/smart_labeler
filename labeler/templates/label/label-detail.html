@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load convert_to_img %}
+
+{% block page_title %}
+    Smart Labeler
+{% endblock %}
+
+{% block script_content %}
+    <script src="{% static 'js/label.js' %}" defer></script>
+{% endblock %}
+
+{% block header %}
+    {% if is_auth %}
+        <nav class="navbar navbar-dark bg-dark navbar-expand-lg shadow-sm mb-2">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="container-fluid">
+                    <ul class="navbar-nav justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{% url 'upload-page' %}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'label-page' %}">Label</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{% url 'about-page' %}">About</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="mx-2">
+                    {% include 'logout.html' %}
+                </div>
+            </div>
+        </nav>
+    {% endif %}
+{% endblock %}
+
+{% block page_content %}
+    <div hidden id="data-saver" data-api-url="{% url 'save-label-data' pk=media.id %}"></div>
+    <h3 class="text-center">Label</h3>
+    <div class="d-flex m-0 p-0 justify-content-around align-items-center">
+        <div id="label-container" class="label-container w-75" data-media="{{ media.media | to_img }}">
+
+        </div>
+        <div class="vr"></div>
+        <div class="d-flex justify-content-center flex-column align-items-center">
+            <div class="mx-1">
+                <div class="list-group-horizontal">
+                    <button type="button" class="btn btn-primary" id="rectangle"
+                    >
+                        Rectangle
+                    </button>
+                </div>
+            </div>
+            <hr/>
+            <div class="mx-1">
+                <form id="final-form">
+                    <input type="hidden" name="userId" value="{{ media.user.id }}">
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="comments" name="comments" placeholder="Comments"></textarea>
+                        <label for="comments">Add Comments</label>
+                    </div>
+                    <button class="btn btn-outline-info" type="submit">Label</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" data-bs-backdrop="true" data-bs-focus="true" data-bs-keyboard="true" id="label-info-modal"
+         tabindex="-1" aria-labelledby="label-info-modal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form class="p-2 m-2" id="labelForm">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="labelContent" id="labelContent"
+                                   placeholder="Dummy Content">
+                            <label for="labelContent" class="form-label">Content</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="annotate">Annotate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

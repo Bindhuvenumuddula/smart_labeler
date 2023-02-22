@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block page_title %}
+    Smart Labeler
+{% endblock %}
+
+{% block page_content %}
+    <div class="d-grid" style="place-items: center;">
+
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <form class="w-25 card mt-5 p-3" action="{% url 'post-login' %}" method="post">
+            {% csrf_token %}
+            <div class="card-header bg-transparent h3 mb-3 fw-normal">Login to continue</div>
+            <div class="mb-3 form-floating">
+                <input type="text" name="username" class="form-control" id="username" aria-label="username"
+                       placeholder="username">
+                <label for="username">Username</label>
+                {% if form.username.errors %}
+                    <ul class="list-group">
+                        {% for error in form.username.errors %}
+                            <li class="list-group-item list-group-item-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="mb-3 form-floating">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                <label for="password">Password</label>
+                {% if form.password.errors %}
+                    <ul class="list-group">
+                        {% for error in form.password.errors %}
+                            <li class="list-group-item list-group-item-danger">
+                                <strong>{{ error|escape }}</strong>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-12">
+                <input type="submit" value="Login" class="btn btn-primary m-auto align-self-start">
+            </div>
+        </form>
+    </div>
+{% endblock %}
